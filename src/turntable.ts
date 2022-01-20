@@ -88,7 +88,7 @@ function autorotate(timestamp: number) {
   const elapsed = Math.floor(timestamp - start);
   previousElapsed = Math.floor(previousTimeStamp - start);
 
-  if (elapsed - previousElapsed > 50) {
+  if (elapsed - previousElapsed > 90) {
     if (currentFrame < sqMax) {
       currentFrame++;
     } else {

@@ -25,6 +25,12 @@ h1 {
   text-align: center;
 }
 
+button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 .container {
   display: grid;
   place-items: center;
@@ -84,5 +90,32 @@ canvas {
     left: 0;
     height: inherit;
     background-color: hsl(199, 56%, 48%);
+  }
+}
+
+.tt-actions {
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1em;
+
+  button {
+    background-color: transparent;
+
+    &:hover {
+      svg path {
+        fill: hsl(199, 56%, 48%);
+      }
+    }
+  }
+
+  svg {
+    width: 56px;
+    height: 56px;
+
+    path {
+      transition: fill 200ms ease;
+    }
   }
 }
