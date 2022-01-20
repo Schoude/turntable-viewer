@@ -19,12 +19,19 @@ const loadedBar = document.querySelector('.loader-bar__inner') as HTMLElement;
 const autorotationInput = document.querySelector(
   '#autorotation'
 ) as HTMLInputElement;
+const autorotationDelayInput = document.querySelector(
+  '#autorotation-delay'
+) as HTMLInputElement;
 
 autorotationInput.checked = autorotation;
 
 autorotationInput.addEventListener('change', e => {
   if ((e.target as HTMLInputElement).checked) animate();
   else cancelAnimationFrame(requestedAnimationFrame);
+});
+
+autorotationDelayInput.addEventListener('change', e => {
+  autoRotationDelay = Number((e.target as HTMLInputElement).value);
 });
 
 function loadImage(

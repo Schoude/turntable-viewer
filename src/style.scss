@@ -140,4 +140,14 @@ canvas {
     display: block;
     margin: 1em 0;
   }
+
+  .form-field {
+    label {
+      margin: 0 0 0.5em 0;
+    }
+  }
+}
+
+input[type='number'] {
+  padding: 0.5em 0.75em;
 }
