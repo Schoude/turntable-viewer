@@ -13,7 +13,7 @@
 <body>
   <h1>Turntable Image Viewer</h1>
 
-  <div class="container">
+  <section class="container">
     <div class="turntable">
       <div class="loader">
         <p class="loaded">0%</p>
@@ -24,7 +24,7 @@
 
       <canvas></canvas>
     </div>
-  </div>
+  </section>
 
   <section class="tt-actions">
     <button type="button" title="go left" class="bp-prev">
@@ -34,7 +34,7 @@
           class=""></path>
       </svg>
     </button>
-    <button type="button" class="bp-next">
+    <button type="button" title="go right" class="bp-next">
       <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path fill="white"
           d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
@@ -45,12 +45,18 @@
 
   <section class="debug">
     <div class="info">
-      <p class="current-frame">
-        Current Frame:
+      <p class="info__entry">
+        Sequence max:
+        <span class="sequence-max__value">0</span>
+      </p>
+
+      <p class="info__entry">
+        Current frame:
         <span class="current-frame__value">0</span>
       </p>
-      <p class="current-bp">
-        Current Breakpoint:
+
+      <p class="info__entry">
+        Current breakpoint:
         <span class="current-bp__value">north</span>
       </p>
     </div>
@@ -63,7 +69,7 @@
 
       <div class="form-field">
         <label for="autorotation-delay">
-          Autorotation delay
+          Autorotation delay (in ms per frame)
         </label>
         <input type="number" name="autorotation-delay" id="autorotation-delay" placeholder="90" value="90">
       </div>

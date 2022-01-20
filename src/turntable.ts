@@ -22,6 +22,14 @@ const autorotationInput = document.querySelector(
 const autorotationDelayInput = document.querySelector(
   '#autorotation-delay'
 ) as HTMLInputElement;
+const currentFrameValueEl = document.querySelector(
+  '.current-frame__value'
+) as HTMLElement;
+const sequenceMaxValueEl = document.querySelector(
+  '.sequence-max__value'
+) as HTMLElement;
+
+sequenceMaxValueEl.innerText = sqMax.toString();
 
 autorotationInput.checked = autorotation;
 
@@ -110,8 +118,10 @@ function autorotate(timestamp: number) {
   if (elapsed - previousElapsed > autoRotationDelay) {
     if (currentFrame < sqMax) {
       currentFrame++;
+      currentFrameValueEl.innerText = currentFrame.toString();
     } else {
       currentFrame = sqMin;
+      currentFrameValueEl.innerText = currentFrame.toString();
     }
 
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
