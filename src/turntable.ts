@@ -8,12 +8,24 @@ const sqMin = 0,
 let loaded = 0;
 let loaderWidth: string;
 let autorotation = true;
+let autoRotationDelay = 90;
+let requestedAnimationFrame: number;
 
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
 const loaderEl = document.querySelector('.loader');
 const loadedEl = document.querySelector('.loaded');
 const loadedBar = document.querySelector('.loader-bar__inner') as HTMLElement;
+const autorotationInput = document.querySelector(
+  '#autorotation'
+) as HTMLInputElement;
+
+autorotationInput.checked = autorotation;
+
+autorotationInput.addEventListener('change', e => {
+  if ((e.target as HTMLInputElement).checked) animate();
+  else cancelAnimationFrame(requestedAnimationFrame);
+});
 
 function loadImage(
   path: string,
@@ -88,7 +100,7 @@ function autorotate(timestamp: number) {
   const elapsed = Math.floor(timestamp - start);
   previousElapsed = Math.floor(previousTimeStamp - start);
 
-  if (elapsed - previousElapsed > 90) {
+  if (elapsed - previousElapsed > autoRotationDelay) {
     if (currentFrame < sqMax) {
       currentFrame++;
     } else {
@@ -101,11 +113,11 @@ function autorotate(timestamp: number) {
     previousTimeStamp = timestamp;
   }
 
-  requestAnimationFrame(autorotate);
+  requestedAnimationFrame = requestAnimationFrame(autorotate);
 }
 
 function animate() {
-  requestAnimationFrame(autorotate);
+  requestedAnimationFrame = requestAnimationFrame(autorotate);
 }
 
 if (autorotation) animate();

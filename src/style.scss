@@ -2,6 +2,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --tt-width: 1000px;
+}
+
 body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -36,10 +40,20 @@ button {
   place-items: center;
 }
 
+.turntable,
+.tt-actions,
+.debug {
+  width: var(--tt-width);
+}
+
+.tt-actions,
+.debug {
+  margin: 0 auto;
+}
+
 .turntable {
   aspect-ratio: 16 / 9;
   display: flex;
-  width: 1200px;
   position: relative;
   background-color: hsl(0, 0%, 19%);
   border-radius: 4px;
@@ -94,8 +108,6 @@ canvas {
 }
 
 .tt-actions {
-  width: 1200px;
-  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   padding-top: 1em;
@@ -117,5 +129,15 @@ canvas {
     path {
       transition: fill 200ms ease;
     }
+  }
+}
+
+.debug {
+  display: flex;
+  gap: 2em;
+
+  label {
+    display: block;
+    margin: 1em 0;
   }
 }

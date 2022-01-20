@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <div class="tt-actions">
+  <section class="tt-actions">
     <button type="button" title="go left" class="bp-prev">
       <svg aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
         <path fill="white"
@@ -41,7 +41,28 @@
           class=""></path>
       </svg>
     </button>
-  </div>
+  </section>
+
+  <section class="debug">
+    <div class="info">
+      <p class="current-frame">
+        Current Frame:
+        <span class="current-frame__value">0</span>
+      </p>
+      <p class="current-bp">
+        Current Breakpoint:
+        <span class="current-bp__value">north</span>
+      </p>
+    </div>
+
+    <div class="toggles">
+      <label for="autorotation">
+        <input type="checkbox" name="autorotation" id="autorotation">
+        Autorotation
+      </label>
+    </div>
+
+  </section>
 </body>
 
 </html>
