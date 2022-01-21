@@ -14,6 +14,8 @@ const sqMin = 0,
   breakpointStart = 0;
 let currentBreakpointIndex = breakpointStart;
 let currentBreakpoint = breakpoints[breakpointStart];
+let bpAnimating = false;
+
 let loaded = 0;
 let loaderWidth: string;
 let currentFrame = sqMin;
@@ -33,6 +35,8 @@ const btnBpPref = document.querySelector('.bp-prev') as HTMLButtonElement;
 const btnBpNext = document.querySelector('.bp-next') as HTMLButtonElement;
 
 btnBpPref.addEventListener('click', () => {
+  if (bpAnimating) return;
+
   if (currentBreakpointIndex - 1 < 0) {
     currentBreakpointIndex = breakpoints.length - 1;
   } else {
@@ -41,9 +45,13 @@ btnBpPref.addEventListener('click', () => {
 
   currentBreakpoint = breakpoints[currentBreakpointIndex];
   currentBreakPointValueEl.innerText = currentBreakpoint.name;
+
+  goToPrevBp();
 });
 
 btnBpNext.addEventListener('click', () => {
+  if (bpAnimating) return;
+
   if (currentBreakpointIndex + 1 > breakpoints.length - 1) {
     currentBreakpointIndex = 0;
   } else {
@@ -52,6 +60,8 @@ btnBpNext.addEventListener('click', () => {
 
   currentBreakpoint = breakpoints[currentBreakpointIndex];
   currentBreakPointValueEl.innerText = currentBreakpoint.name;
+
+  goToNextBp();
 });
 
 // Debug elements
@@ -182,65 +192,6 @@ function animateAutorotation() {
   requestedAnimationFrame = requestAnimationFrame(autorotate);
 }
 
-/**
- * Animates from the current frame to the target frame
- */
-// function easeToFrame(currentFrame: number, targetFrame: number) {
-//   if (currentFrame === targetFrame) return;
-
-//   let start: number;
-//   let previousTimeStamp: number = 0;
-//   let previousElapsed: number = 0;
-
-//   // TODO: figure out in which direction to turn
-//   // const gapRight = Math.abs(currentFrame - targetFrame);
-//   // const gapToSqMax = Math.abs(currentFrame - sqMax);
-//   // const gapFromSqMaxToTarget = Math.abs(sqMax - targetFrame);
-//   // const gapLeft = gapToSqMax + gapFromSqMaxToTarget;
-//   // // let remaining = gap;
-//   // // const halfSq = sqMax / 2;
-//   // console.log('gapRight', gapRight);
-//   // console.log('gapToSqMax', gapToSqMax);
-//   // console.log('gapFromSqMaxToTarget', gapFromSqMaxToTarget);
-//   // console.log('gapLeft', gapLeft);
-
-//   // console.log('go right', gapRight < gapLeft);
-//   // console.log('go left', gapRight > gapLeft);
-
-//   function animateToFrame(timestamp: number) {
-//     if (start === undefined) {
-//       start = timestamp;
-//     }
-
-//     if (previousTimeStamp === 0) {
-//       previousTimeStamp = timestamp;
-//     }
-
-//     const elapsed = Math.floor(timestamp - start);
-//     previousElapsed = Math.floor(previousTimeStamp - start);
-
-//     if (elapsed - previousElapsed > autoRotationDelay) {
-//       if (currentFrame < targetFrame) {
-//         currentFrame++;
-//         currentFrameValueEl.innerText = currentFrame.toString();
-//       } else {
-//         currentFrame = targetFrame;
-//         currentFrameValueEl.innerText = currentFrame.toString();
-//         cancelAnimationFrame(requestedAnimationFrame);
-//       }
-
-//       ctx?.clearRect(0, 0, canvas.width, canvas.height);
-//       ctx?.drawImage(frames[currentFrame], 0, 0);
-
-//       previousTimeStamp = timestamp;
-//     }
-
-//     requestedAnimationFrame = requestAnimationFrame(animateToFrame);
-//   }
-
-//   requestedAnimationFrame = requestAnimationFrame(animateToFrame);
-// }
-
 if (autorotation) animateAutorotation();
 else {
   currentFrame = breakpoints[breakpointStart].frame;
@@ -249,8 +200,68 @@ else {
   ctx?.drawImage(frames[currentFrame], 0, 0);
 }
 
-// setTimeout(() => {
-//   easeToFrame(currentFrame, 80);
-// }, 500);
+function goToNextBp() {
+  bpAnimating = true;
+
+  const animate = () => {
+    requestedAnimationFrame = requestAnimationFrame(animate);
+    currentFrame++;
+
+    if (currentFrame > sqMax) {
+      currentFrame = sqMin;
+
+      if (currentFrame === currentBreakpoint.frame) {
+        cancelAnimationFrame(requestedAnimationFrame);
+      } else {
+        currentFrame++;
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(frames[currentFrame], 0, 0);
+      }
+    }
+
+    if (currentFrame === currentBreakpoint.frame) {
+      cancelAnimationFrame(requestedAnimationFrame);
+      bpAnimating = false;
+    }
+
+    currentFrameValueEl.innerText = currentFrame.toString();
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+  };
+
+  requestedAnimationFrame = requestAnimationFrame(animate);
+}
+
+function goToPrevBp() {
+  bpAnimating = true;
+
+  const animate = () => {
+    requestedAnimationFrame = requestAnimationFrame(animate);
+    currentFrame--;
+
+    if (currentFrame < sqMin) {
+      currentFrame = sqMax;
+
+      if (currentFrame === currentBreakpoint.frame) {
+        cancelAnimationFrame(requestedAnimationFrame);
+      } else {
+        currentFrame--;
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+        ctx?.drawImage(frames[currentFrame], 0, 0);
+      }
+    }
+
+    if (currentFrame === currentBreakpoint.frame) {
+      cancelAnimationFrame(requestedAnimationFrame);
+      bpAnimating = false;
+    }
+
+    currentFrameValueEl.innerText = currentFrame.toString();
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+  };
+
+  requestedAnimationFrame = requestAnimationFrame(animate);
+}
 
 export {};
