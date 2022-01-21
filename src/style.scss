@@ -176,6 +176,7 @@ canvas {
   display: flex;
   flex-direction: column;
   padding-inline: 1em;
+  font-size: 1.125em;
 
   @media (min-width: 1024px) {
     gap: 2em;
