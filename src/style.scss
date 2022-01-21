@@ -5,9 +5,9 @@
 :root {
   --tt-width: 1000px;
   --bg-dark: hsl(0, 0%, 9%);
-  --bg-light: hsl(79, 45%, 70%);
+  --bg-light: hsla(263, 25%, 80%);
   --text-dark: hsl(0, 0%, 91%);
-  --text-light: hsl(0, 0%, 13%);
+  --text-light: hsl(222, 18%, 11%);
 }
 
 body {
@@ -101,7 +101,7 @@ canvas {
 
 .loader {
   --bg-dark: hsl(0, 0%, 25%);
-  --bg-light: hsl(258, 32%, 50%);
+  --bg-light: hsl(159, 61%, 68%);
 
   text-align: center;
   color: rgb(219, 219, 219);
@@ -119,6 +119,7 @@ canvas {
 
   @media (prefers-color-scheme: light) {
     background-color: var(--bg-light);
+    color: var(--text-light);
   }
 
   &.hidden {
@@ -143,7 +144,7 @@ canvas {
     position: absolute;
     left: 0;
     height: inherit;
-    background-color: hsl(199, 56%, 48%);
+    background-color: hsl(210, 48%, 47%);
   }
 }
 
@@ -157,7 +158,7 @@ canvas {
 
     &:hover {
       svg path {
-        fill: hsl(199, 56%, 48%);
+        fill: hsl(210, 48%, 47%);
       }
     }
   }
