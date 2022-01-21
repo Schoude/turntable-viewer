@@ -4,6 +4,10 @@
 
 :root {
   --tt-width: 1000px;
+  --bg-dark: hsl(0, 0%, 9%);
+  --bg-light: hsl(79, 45%, 70%);
+  --text-dark: hsl(0, 0%, 91%);
+  --text-light: hsl(0, 0%, 13%);
 }
 
 body {
@@ -11,17 +15,21 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
+  min-height: 100vh;
+  margin-block-end: 2em;
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    color: rgb(230, 230, 230);
+    color: var(--text-dark);
+    background-color: var(--bg-dark);
   }
 }
 
 @media (prefers-color-scheme: light) {
   body {
-    color: #2c3e50;
+    color: var(--text-light);
+    background-color: var(--bg-light);
   }
 }
 
@@ -40,26 +48,48 @@ button {
   place-items: center;
 }
 
-.turntable,
+.container,
 .tt-actions,
 .debug {
-  width: var(--tt-width);
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    width: var(--tt-width);
+  }
 }
 
+.container,
 .tt-actions,
 .debug {
   margin: 0 auto;
 }
 
 .turntable {
+  --bg-dark: hsl(0, 0%, 15%);
+  --bg-light: hsl(0, 0%, 84%);
+
+  width: inherit;
   aspect-ratio: 16 / 9;
   display: flex;
   position: relative;
-  background-color: hsl(0, 0%, 19%);
-  border-radius: 4px;
+  background-color: var(--bg-dark);
+
+  @media (min-width: 1024px) {
+    width: var(--tt-width);
+    border-radius: 4px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--bg-dark);
+  }
+
+  @media (prefers-color-scheme: light) {
+    background-color: var(--bg-light);
+  }
 }
 
 canvas {
+  width: inherit;
   border-radius: inherit;
   opacity: 0;
   transition: opacity 1s ease;
@@ -70,9 +100,11 @@ canvas {
 }
 
 .loader {
+  --bg-dark: hsl(0, 0%, 25%);
+  --bg-light: hsl(258, 32%, 50%);
+
   text-align: center;
-  background-color: hsl(0, 0%, 38%);
-  color: rgb(32, 32, 32);
+  color: rgb(219, 219, 219);
   padding-inline: 1em;
   border-radius: 4px;
   position: absolute;
@@ -80,6 +112,14 @@ canvas {
   left: 50%;
   transform: translate(-50%, -50%);
   transition: opacity 1s ease;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--bg-dark);
+  }
+
+  @media (prefers-color-scheme: light) {
+    background-color: var(--bg-light);
+  }
 
   &.hidden {
     opacity: 0;
@@ -95,7 +135,7 @@ canvas {
 .loader-bar {
   height: 5px;
   width: 200px;
-  background-color: rgba(141, 143, 143, 0.192);
+  background-color: rgba(141, 143, 143, 0.25);
   position: relative;
   margin-block: 1rem;
 
@@ -134,7 +174,14 @@ canvas {
 
 .debug {
   display: flex;
-  gap: 2em;
+  flex-direction: column;
+  padding-inline: 1em;
+
+  @media (min-width: 1024px) {
+    gap: 2em;
+    flex-direction: row;
+    padding-inline: 0;
+  }
 
   label {
     display: block;
@@ -146,6 +193,10 @@ canvas {
       margin: 0 0 0.5em 0;
     }
   }
+}
+
+.info {
+  min-width: 25ch;
 }
 
 input[type='number'] {
