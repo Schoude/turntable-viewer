@@ -79,6 +79,9 @@ btnBpNext.addEventListener('click', () => {
 
 btnDemand.addEventListener('click', async () => {
   if (turntableDemanded) return;
+  turntableDemanded = true;
+  btnDemand.disabled = true;
+  btnDemand.classList.add('loaded');
 
   loaderEl?.classList.remove('invisible');
   loadingHint.classList.add('hidden');
@@ -99,8 +102,6 @@ btnDemand.addEventListener('click', async () => {
   }
 
   canvas.style.cursor = 'grab';
-  btnDemand.classList.add('loaded');
-  btnDemand.disabled = true;
   btnBpPref.disabled = false;
   btnBpNext.disabled = false;
   autorotationInput.disabled = false;
