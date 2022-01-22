@@ -11,10 +11,10 @@ const sqMin = 0,
   extension = '.jpg',
   frames: HTMLImageElement[] = [],
   breakpoints: BreakPoint[] = [
-    { name: 'north', frame: 0 },
-    { name: 'east', frame: 25 },
-    { name: 'south', frame: 50 },
-    { name: 'west', frame: 75 },
+    { name: 'north', frame: 86 },
+    { name: 'east', frame: 14 },
+    { name: 'south', frame: 38 },
+    { name: 'west', frame: 63 },
   ],
   breakpointStart = 0;
 let currentBreakpointIndex = breakpointStart;
@@ -98,6 +98,7 @@ btnDemand.addEventListener('click', async () => {
     ctx?.drawImage(frames[currentFrame], 0, 0);
   }
 
+  canvas.style.cursor = 'grab';
   btnDemand.classList.add('loaded');
   btnDemand.disabled = true;
   btnBpPref.disabled = false;
@@ -361,6 +362,9 @@ canvas.addEventListener('mousemove', e => {
 });
 
 function findClosestBreakpoint(needle: number, haystack: BreakPoint[]) {
+  // TODO: can't handle if the nearest breakpoint frame is 0 from a high currentFrame
+  // 75 <- 95 -> 0. Always returns 75 as the nearest.
+  // changing the breakpoint from sqMin to sqMax makes it work
   return haystack.reduce((a, b) => {
     let aDiff = Math.abs(a.frame - needle);
     let bDiff = Math.abs(b.frame - needle);
