@@ -155,12 +155,6 @@ async function loadImages(throttled: boolean = false) {
   }
 }
 
-await loadImages(true);
-
-canvas.width = frames[0].width;
-canvas.height = frames[0].height;
-canvas.classList.add('visible');
-
 /**
  * Handles the autorotation animation.
  */
@@ -200,14 +194,6 @@ function animateAutorotation() {
   }
 
   requestedAnimationFrame = requestAnimationFrame(autorotate);
-}
-
-if (autorotation) animateAutorotation();
-else {
-  currentFrame = breakpoints[breakpointStart].frame;
-  currentFrameValueEl.innerText = currentFrame.toString();
-  ctx?.clearRect(0, 0, canvas.width, canvas.height);
-  ctx?.drawImage(frames[currentFrame], 0, 0);
 }
 
 function goToNextBp() {
@@ -276,10 +262,12 @@ function goToPrevBp() {
 
 canvas.addEventListener('mousedown', () => {
   dragging = true;
+  canvas.style.cursor = 'grabbing';
 });
 
 canvas.addEventListener('mouseup', () => {
   dragging = false;
+  canvas.style.cursor = 'grab';
   goToClosestBreakPoint();
 });
 
@@ -399,6 +387,20 @@ function goToClosestBp(closestBp: BreakPoint) {
   };
 
   requestedAnimationFrame = requestAnimationFrame(animate);
+}
+
+await loadImages(true);
+
+canvas.width = frames[0].width;
+canvas.height = frames[0].height;
+canvas.classList.add('visible');
+
+if (autorotation) animateAutorotation();
+else {
+  currentFrame = breakpoints[breakpointStart].frame;
+  currentFrameValueEl.innerText = currentFrame.toString();
+  ctx?.clearRect(0, 0, canvas.width, canvas.height);
+  ctx?.drawImage(frames[currentFrame], 0, 0);
 }
 
 export {};

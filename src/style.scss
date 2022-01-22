@@ -94,6 +94,7 @@ canvas {
   border-radius: inherit;
   opacity: 0;
   transition: opacity 1s ease;
+  cursor: grab;
 
   &.visible {
     opacity: 1;
