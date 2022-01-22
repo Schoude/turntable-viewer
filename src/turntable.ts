@@ -446,18 +446,4 @@ function goToClosestBp(closestBp: BreakPoint) {
   requestedAnimationFrame = requestAnimationFrame(animate);
 }
 
-// await loadImages(true);
-
-// canvas.width = frames[0].width;
-// canvas.height = frames[0].height;
-// canvas.classList.add('visible');
-
-// if (autorotation) animateAutorotation();
-// else {
-//   currentFrame = breakpoints[breakpointStart].frame;
-//   currentFrameValueEl.innerText = currentFrame.toString();
-//   ctx?.clearRect(0, 0, canvas.width, canvas.height);
-//   ctx?.drawImage(frames[currentFrame], 0, 0);
-// }
-
 export {};
