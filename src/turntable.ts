@@ -1,3 +1,8 @@
+interface BreakPoint {
+  name: string;
+  frame: number;
+}
+
 const sqMin = 0,
   sqMax = 99,
   basePath =
@@ -5,7 +10,7 @@ const sqMin = 0,
   prefix = 'Fassade_',
   extension = '.jpg',
   frames: HTMLImageElement[] = [],
-  breakpoints = [
+  breakpoints: BreakPoint[] = [
     { name: 'north', frame: 0 },
     { name: 'east', frame: 25 },
     { name: 'south', frame: 50 },
@@ -90,7 +95,10 @@ autorotationInput.checked = autorotation;
 
 autorotationInput.addEventListener('change', e => {
   if ((e.target as HTMLInputElement).checked) animateAutorotation();
-  else cancelAnimationFrame(requestedAnimationFrame);
+  else {
+    cancelAnimationFrame(requestedAnimationFrame);
+    goToClosestBreakPoint();
+  }
 });
 
 autorotationDelayInput.addEventListener('change', e => {
@@ -272,16 +280,17 @@ canvas.addEventListener('mousedown', () => {
 
 canvas.addEventListener('mouseup', () => {
   dragging = false;
+  goToClosestBreakPoint();
 });
 
 canvas.addEventListener('mouseout', () => {
   dragging = false;
 });
 
-let perSecond = 150;
+let perSecond = 60;
 let wait = false;
 canvas.addEventListener('mousemove', e => {
-  if (dragging && !wait) {
+  if (dragging && !wait && !bpAnimating) {
     if (e.movementX > 0) {
       currentFrame++;
 
@@ -307,5 +316,89 @@ canvas.addEventListener('mousemove', e => {
     }, 1000 / perSecond);
   }
 });
+
+function findClosestBreakpoint(needle: number, haystack: BreakPoint[]) {
+  return haystack.reduce((a, b) => {
+    let aDiff = Math.abs(a.frame - needle);
+    let bDiff = Math.abs(b.frame - needle);
+
+    if (aDiff == bDiff) {
+      return a > b ? a : b;
+    } else {
+      return bDiff < aDiff ? b : a;
+    }
+  });
+}
+
+function goToClosestBreakPoint() {
+  const closestBp = findClosestBreakpoint(currentFrame, breakpoints);
+  if (currentFrame === closestBp.frame) {
+    currentBreakpoint = closestBp;
+    currentBreakPointValueEl.innerText = currentBreakpoint.name;
+    return;
+  }
+
+  goToClosestBp(closestBp);
+}
+
+function goToClosestBp(closestBp: BreakPoint) {
+  bpAnimating = true;
+  let direction: 'right' | 'left';
+
+  if (currentFrame > closestBp.frame) {
+    direction = 'left';
+  } else {
+    direction = 'right';
+  }
+
+  const animate = () => {
+    requestedAnimationFrame = requestAnimationFrame(animate);
+
+    if (direction === 'right') {
+      currentFrame++;
+      if (currentFrame > sqMax) {
+        currentFrame = sqMin;
+
+        if (currentFrame === closestBp.frame) {
+          cancelAnimationFrame(requestedAnimationFrame);
+        } else {
+          currentFrame++;
+          ctx?.clearRect(0, 0, canvas.width, canvas.height);
+          ctx?.drawImage(frames[currentFrame], 0, 0);
+        }
+      }
+    } else {
+      currentFrame--;
+      if (currentFrame < sqMin) {
+        currentFrame = sqMax;
+
+        if (currentFrame === currentBreakpoint.frame) {
+          cancelAnimationFrame(requestedAnimationFrame);
+        } else {
+          currentFrame--;
+          ctx?.clearRect(0, 0, canvas.width, canvas.height);
+          ctx?.drawImage(frames[currentFrame], 0, 0);
+        }
+      }
+    }
+
+    if (currentFrame === closestBp.frame) {
+      cancelAnimationFrame(requestedAnimationFrame);
+      bpAnimating = false;
+
+      currentBreakpoint = closestBp;
+      currentBreakpointIndex = breakpoints.findIndex(
+        bp => bp.frame === closestBp.frame
+      );
+      currentBreakPointValueEl.innerText = currentBreakpoint.name;
+    }
+
+    currentFrameValueEl.innerText = currentFrame.toString();
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+  };
+
+  requestedAnimationFrame = requestAnimationFrame(animate);
+}
 
 export {};
