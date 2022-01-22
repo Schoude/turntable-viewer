@@ -465,7 +465,7 @@ canvas.addEventListener('touchend', () => {
   goToClosestBreakPoint();
 });
 
-let perSecondTouch = 500;
+let perSecondTouch = 2000;
 let previousMoveX = 0;
 canvas.addEventListener('touchmove', e => {
   if (isRotating || !turntableDemanded) return;
@@ -480,6 +480,7 @@ canvas.addEventListener('touchmove', e => {
 
       if (previousMoveX >= e.touches[0].pageX) {
         dragFromX = e.touches[0].pageX;
+        currentFrame--;
       }
     } else if (e.touches[0].pageX < dragFromX) {
       currentFrame--;
@@ -490,6 +491,7 @@ canvas.addEventListener('touchmove', e => {
 
       if (previousMoveX <= e.touches[0].pageX) {
         dragFromX = e.touches[0].pageX;
+        currentFrame++;
       }
     }
 
