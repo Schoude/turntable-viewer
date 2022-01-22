@@ -100,6 +100,8 @@ btnDemand.addEventListener('click', async () => {
 
   btnDemand.classList.add('loaded');
   btnDemand.disabled = true;
+  btnBpPref.disabled = false;
+  btnBpNext.disabled = false;
   autorotationInput.disabled = false;
   autorotationDelayInput.disabled = false;
   turntableDemanded = true;
