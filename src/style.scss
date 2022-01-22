@@ -56,13 +56,8 @@ button {
 
   @media (min-width: 1024px) {
     width: var(--tt-width);
+    margin: 0 auto;
   }
-}
-
-.container,
-.tt-actions,
-.debug {
-  margin: 0 auto;
 }
 
 .turntable {
