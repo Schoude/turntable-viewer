@@ -201,11 +201,19 @@ canvas {
 
   button {
     background-color: transparent;
+    transition: opacity 1s ease;
 
-    &:hover,
-    &:focus-visible {
-      svg path {
-        fill: hsl(210, 48%, 47%);
+    &:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled) {
+      &:hover,
+      &:focus-visible {
+        svg path {
+          fill: hsl(210, 48%, 47%);
+        }
       }
     }
   }

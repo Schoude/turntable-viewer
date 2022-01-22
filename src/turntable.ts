@@ -26,6 +26,7 @@ let loaderWidth: string;
 let currentFrame = sqMin;
 let autorotation = false;
 let autoRotationDelay = 90;
+let isRotating = false;
 let requestedAnimationFrame: number;
 
 let dragging = false;
@@ -47,7 +48,7 @@ const btnBpNext = document.querySelector('.bp-next') as HTMLButtonElement;
 const btnDemand = document.querySelector('.btn-demand') as HTMLButtonElement;
 
 btnBpPref.addEventListener('click', () => {
-  if (bpAnimating) return;
+  if (bpAnimating || isRotating) return;
 
   if (currentBreakpointIndex - 1 < 0) {
     currentBreakpointIndex = breakpoints.length - 1;
@@ -62,7 +63,7 @@ btnBpPref.addEventListener('click', () => {
 });
 
 btnBpNext.addEventListener('click', () => {
-  if (bpAnimating) return;
+  if (bpAnimating || isRotating) return;
 
   if (currentBreakpointIndex + 1 > breakpoints.length - 1) {
     currentBreakpointIndex = 0;
@@ -128,10 +129,18 @@ autorotationInput.checked = autorotation;
 
 autorotationInput.addEventListener('change', e => {
   if ((e.target as HTMLInputElement).checked) {
+    isRotating = true;
+    canvas.style.cursor = 'default';
+    btnBpPref.disabled = true;
+    btnBpNext.disabled = true;
     animateAutorotation();
   } else {
     cancelAnimationFrame(requestedAnimationFrame);
     goToClosestBreakPoint();
+    isRotating = false;
+    canvas.style.cursor = 'grab';
+    btnBpPref.disabled = false;
+    btnBpNext.disabled = false;
   }
 });
 
@@ -295,17 +304,23 @@ function goToPrevBp() {
 }
 
 canvas.addEventListener('mousedown', () => {
+  if (isRotating || !turntableDemanded) return;
+
   dragging = true;
   canvas.style.cursor = 'grabbing';
 });
 
 canvas.addEventListener('mouseup', () => {
+  if (isRotating || !turntableDemanded) return;
+
   dragging = false;
   canvas.style.cursor = 'grab';
   goToClosestBreakPoint();
 });
 
 canvas.addEventListener('mouseout', () => {
+  if (isRotating || !turntableDemanded) return;
+
   dragging = false;
   canvas.style.cursor = 'grab';
   goToClosestBreakPoint();
@@ -314,6 +329,8 @@ canvas.addEventListener('mouseout', () => {
 let perSecond = 60;
 let wait = false;
 canvas.addEventListener('mousemove', e => {
+  if (isRotating || !turntableDemanded) return;
+
   if (dragging && !wait && !bpAnimating) {
     if (e.movementX > 0) {
       currentFrame++;
