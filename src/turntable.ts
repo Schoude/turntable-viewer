@@ -37,6 +37,7 @@ const ctx = canvas.getContext('2d');
 const loaderEl = document.querySelector('.loader');
 const loadedEl = document.querySelector('.loaded');
 const loadedBar = document.querySelector('.loader-bar__inner') as HTMLElement;
+const loadingHint = document.querySelector('.loading-hint') as HTMLElement;
 
 // BP buttons
 const btnBpPref = document.querySelector('.bp-prev') as HTMLButtonElement;
@@ -79,6 +80,7 @@ btnDemand.addEventListener('click', async () => {
   if (turntableDemanded) return;
 
   loaderEl?.classList.remove('invisible');
+  loadingHint.classList.add('hidden');
 
   await loadImages(true);
 
@@ -86,8 +88,9 @@ btnDemand.addEventListener('click', async () => {
   canvas.height = frames[0].height;
   canvas.classList.add('visible');
 
-  if (autorotation) animateAutorotation();
-  else {
+  if (autorotation) {
+    animateAutorotation();
+  } else {
     currentFrame = breakpoints[breakpointStart].frame;
     currentFrameValueEl.innerText = currentFrame.toString();
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
@@ -96,6 +99,8 @@ btnDemand.addEventListener('click', async () => {
 
   btnDemand.classList.add('loaded');
   btnDemand.disabled = true;
+  autorotationInput.disabled = false;
+  autorotationDelayInput.disabled = false;
   turntableDemanded = true;
 });
 
@@ -122,8 +127,9 @@ currentBreakPointValueEl.innerText = breakpoints[breakpointStart].name;
 autorotationInput.checked = autorotation;
 
 autorotationInput.addEventListener('change', e => {
-  if ((e.target as HTMLInputElement).checked) animateAutorotation();
-  else {
+  if ((e.target as HTMLInputElement).checked) {
+    animateAutorotation();
+  } else {
     cancelAnimationFrame(requestedAnimationFrame);
     goToClosestBreakPoint();
   }
@@ -301,6 +307,8 @@ canvas.addEventListener('mouseup', () => {
 
 canvas.addEventListener('mouseout', () => {
   dragging = false;
+  canvas.style.cursor = 'grab';
+  goToClosestBreakPoint();
 });
 
 let perSecond = 60;

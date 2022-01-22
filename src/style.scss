@@ -128,11 +128,6 @@ canvas {
     display: none;
   }
 
-  &.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-
   p {
     font-weight: 600;
     font-size: 1.25em;
@@ -158,6 +153,44 @@ canvas {
     left: 0;
     height: inherit;
     background-color: hsl(210, 48%, 47%);
+  }
+}
+
+.loading-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5em;
+  gap: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+  transition: opacity 1s ease;
+
+  @media (min-width: 1024px) {
+    font-size: 2em;
+    bottom: 10px;
+    right: 20px;
+    left: unset;
+    transform: unset;
+    flex-direction: row;
+    align-items: unset;
+  }
+
+  .hand-point-down {
+    animation: bounce 1.5s ease-in infinite alternate;
+
+    width: 40px;
+
+    @media (min-width: 1024px) {
+      width: 70px;
+    }
+
+    path {
+      fill: hsl(210, 48%, 47%);
+    }
   }
 }
 
@@ -249,5 +282,19 @@ input[type='number'] {
     &.loaded {
       cursor: not-allowed;
     }
+  }
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-30px);
   }
 }
