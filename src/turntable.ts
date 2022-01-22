@@ -509,4 +509,40 @@ canvas.addEventListener('touchmove', e => {
   }
 });
 
+document.addEventListener('keyup', e => {
+  switch (e.key) {
+    case 'ArrowRight':
+    case 'd':
+      if (bpAnimating || isRotating) return;
+
+      if (currentBreakpointIndex + 1 > breakpoints.length - 1) {
+        currentBreakpointIndex = 0;
+      } else {
+        currentBreakpointIndex++;
+      }
+
+      currentBreakpoint = breakpoints[currentBreakpointIndex];
+      currentBreakPointValueEl.innerText = currentBreakpoint.name;
+
+      goToNextBp();
+      break;
+
+    case 'ArrowLeft':
+    case 'a':
+      if (bpAnimating || isRotating) return;
+
+      if (currentBreakpointIndex - 1 < 0) {
+        currentBreakpointIndex = breakpoints.length - 1;
+      } else {
+        currentBreakpointIndex--;
+      }
+
+      currentBreakpoint = breakpoints[currentBreakpointIndex];
+      currentBreakPointValueEl.innerText = currentBreakpoint.name;
+
+      goToPrevBp();
+      break;
+  }
+});
+
 export {};
