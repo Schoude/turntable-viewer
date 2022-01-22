@@ -31,6 +31,7 @@ let requestedAnimationFrame: number;
 
 let dragging = false;
 let turntableDemanded = false;
+let dragFromX = 0;
 
 // Elements
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
@@ -393,8 +394,6 @@ function goToClosestBp(closestBp: BreakPoint) {
   bpAnimating = true;
   let direction: 'right' | 'left';
 
-  console.log(closestBp.frame);
-
   if (currentFrame > closestBp.frame) {
     direction = 'left';
   } else {
@@ -450,5 +449,62 @@ function goToClosestBp(closestBp: BreakPoint) {
 
   requestedAnimationFrame = requestAnimationFrame(animate);
 }
+
+canvas.addEventListener('touchstart', e => {
+  if (isRotating || !turntableDemanded) return;
+
+  dragging = true;
+  dragFromX = e.touches[0].pageX;
+});
+
+canvas.addEventListener('touchend', () => {
+  if (isRotating || !turntableDemanded) return;
+
+  dragging = true;
+  dragFromX = 0;
+  goToClosestBreakPoint();
+});
+
+let perSecondTouch = 500;
+let previousMoveX = 0;
+canvas.addEventListener('touchmove', e => {
+  if (isRotating || !turntableDemanded) return;
+
+  if (dragging && !wait && !bpAnimating) {
+    if (e.touches[0].pageX > dragFromX) {
+      currentFrame++;
+
+      if (currentFrame > sqMax) {
+        currentFrame = sqMin;
+      }
+
+      if (previousMoveX >= e.touches[0].pageX) {
+        dragFromX = e.touches[0].pageX;
+      }
+    } else if (e.touches[0].pageX < dragFromX) {
+      currentFrame--;
+
+      if (currentFrame < sqMin) {
+        currentFrame = sqMax;
+      }
+
+      if (previousMoveX <= e.touches[0].pageX) {
+        dragFromX = e.touches[0].pageX;
+      }
+    }
+
+    previousMoveX = e.touches[0].pageX;
+
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+    currentFrameValueEl.innerText = currentFrame.toString();
+
+    wait = true;
+
+    setTimeout(() => {
+      wait = false;
+    }, 1000 / perSecondTouch);
+  }
+});
 
 export {};
