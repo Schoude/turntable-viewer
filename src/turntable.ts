@@ -23,6 +23,8 @@ let autorotation = false;
 let autoRotationDelay = 90;
 let requestedAnimationFrame: number;
 
+let dragging = false;
+
 // Elements
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d');
@@ -263,5 +265,47 @@ function goToPrevBp() {
 
   requestedAnimationFrame = requestAnimationFrame(animate);
 }
+
+canvas.addEventListener('mousedown', () => {
+  dragging = true;
+});
+
+canvas.addEventListener('mouseup', () => {
+  dragging = false;
+});
+
+canvas.addEventListener('mouseout', () => {
+  dragging = false;
+});
+
+let perSecond = 150;
+let wait = false;
+canvas.addEventListener('mousemove', e => {
+  if (dragging && !wait) {
+    if (e.movementX > 0) {
+      currentFrame++;
+
+      if (currentFrame > sqMax) {
+        currentFrame = sqMin;
+      }
+    } else if (e.movementX < 0) {
+      currentFrame--;
+
+      if (currentFrame < sqMin) {
+        currentFrame = sqMax;
+      }
+    }
+
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+    currentFrameValueEl.innerText = currentFrame.toString();
+
+    wait = true;
+
+    setTimeout(() => {
+      wait = false;
+    }, 1000 / perSecond);
+  }
+});
 
 export {};

@@ -164,7 +164,8 @@ canvas {
   button {
     background-color: transparent;
 
-    &:hover {
+    &:hover,
+    &:focus-visible {
       svg path {
         fill: hsl(210, 48%, 47%);
       }
