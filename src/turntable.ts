@@ -29,6 +29,7 @@ let autoRotationDelay = 90;
 let requestedAnimationFrame: number;
 
 let dragging = false;
+let turntableDemanded = false;
 
 // Elements
 const canvas = document.querySelector('canvas') as HTMLCanvasElement;
@@ -40,6 +41,9 @@ const loadedBar = document.querySelector('.loader-bar__inner') as HTMLElement;
 // BP buttons
 const btnBpPref = document.querySelector('.bp-prev') as HTMLButtonElement;
 const btnBpNext = document.querySelector('.bp-next') as HTMLButtonElement;
+
+// Action buttons
+const btnDemand = document.querySelector('.btn-demand') as HTMLButtonElement;
 
 btnBpPref.addEventListener('click', () => {
   if (bpAnimating) return;
@@ -69,6 +73,30 @@ btnBpNext.addEventListener('click', () => {
   currentBreakPointValueEl.innerText = currentBreakpoint.name;
 
   goToNextBp();
+});
+
+btnDemand.addEventListener('click', async () => {
+  if (turntableDemanded) return;
+
+  loaderEl?.classList.remove('invisible');
+
+  await loadImages(true);
+
+  canvas.width = frames[0].width;
+  canvas.height = frames[0].height;
+  canvas.classList.add('visible');
+
+  if (autorotation) animateAutorotation();
+  else {
+    currentFrame = breakpoints[breakpointStart].frame;
+    currentFrameValueEl.innerText = currentFrame.toString();
+    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+    ctx?.drawImage(frames[currentFrame], 0, 0);
+  }
+
+  btnDemand.classList.add('loaded');
+  btnDemand.disabled = true;
+  turntableDemanded = true;
 });
 
 // Debug elements
@@ -333,6 +361,8 @@ function goToClosestBp(closestBp: BreakPoint) {
   bpAnimating = true;
   let direction: 'right' | 'left';
 
+  console.log(closestBp.frame);
+
   if (currentFrame > closestBp.frame) {
     direction = 'left';
   } else {
@@ -389,18 +419,18 @@ function goToClosestBp(closestBp: BreakPoint) {
   requestedAnimationFrame = requestAnimationFrame(animate);
 }
 
-await loadImages(true);
+// await loadImages(true);
 
-canvas.width = frames[0].width;
-canvas.height = frames[0].height;
-canvas.classList.add('visible');
+// canvas.width = frames[0].width;
+// canvas.height = frames[0].height;
+// canvas.classList.add('visible');
 
-if (autorotation) animateAutorotation();
-else {
-  currentFrame = breakpoints[breakpointStart].frame;
-  currentFrameValueEl.innerText = currentFrame.toString();
-  ctx?.clearRect(0, 0, canvas.width, canvas.height);
-  ctx?.drawImage(frames[currentFrame], 0, 0);
-}
+// if (autorotation) animateAutorotation();
+// else {
+//   currentFrame = breakpoints[breakpointStart].frame;
+//   currentFrameValueEl.innerText = currentFrame.toString();
+//   ctx?.clearRect(0, 0, canvas.width, canvas.height);
+//   ctx?.drawImage(frames[currentFrame], 0, 0);
+// }
 
 export {};
